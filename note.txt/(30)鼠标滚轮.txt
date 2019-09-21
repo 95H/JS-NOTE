@@ -1,0 +1,46 @@
+滚轮事件（onmouseWheel）
+1、添加方式：
+（1）谷歌
+     addEventListener("mousewheel",scrollFn,false)
+（2）火狐 
+     addEventListener("DOMMouseScroll",scrollFn,false)
+（3） IE      
+     attachEvent("onmousewheel",scrollFn);
+例：
+          if(window.addEventListener){
+document.addEventListener("mousewheel",scrollFn,false)
+             document.addEventListener   ("DOMMouseScroll",scrollFn,false)
+       }else{
+  document.attachEvent("onmousewheel",scrollFn)
+       }
+       function scrollFn () {
+          console.log("滚动")
+       }
+
+例：
+ //滚轮事件的兼容性
+function mousewheel(obj, fun1, fun2) {
+  //滚轮事件在ie 谷歌与火狐浏览器的不同的添加方式
+  if (document.attachEvent) {
+    obj.attachEvent("onmousewheel", scrollFn);
+  } else if (document.addEventListener) {
+    obj.addEventListener("mousewheel", scrollFn, false);
+    obj.addEventListener("DOMMouseScroll", scrollFn, false);
+  }
+
+  function scrollFn(e) {
+    var ev = e || window.event;
+    if (ev.detail == -3 || ev.wheelDelta == 120) {
+      fun1.call(obj)
+    } else if (ev.detail == 3 || ev.wheelDelta == -120) {
+      fun2.call(obj)
+    }
+  }
+}
+
+注：call方法：
+函数.call(想获得方法的对象)
+fun1.call(obj) 
+//将window对象向下滚动的函数fun1的方法赋予obj对象，并且执行
+fun2.call(obj) 
+//将window对象向上滚动的函数fun1的方法赋予obj对象，并且执行

@@ -1,0 +1,125 @@
+javascript-History、Location、screen对象实例讲解
+
+一、history对象
+    包含浏览器访问过的url
+    1.属性
+     length  返回浏览器历史记录的数量
+    例：两个页面链接，看history.length的数量变化
+    2.方法
+     back() 后退
+     forward()  前进
+     go(number)  如果参数是正数，那么就是前进相应的数目，如果是负数那么反之，如果是0那么就是刷新，一般前进为1；后退为-1；
+
+
+二、location对象  包含有当前url的相关信息
+    1.属性
+      href      设置或返回完整的url
+      search  返回url?后面的查询部分
+    2.方法
+      assign()   加载新的文档（有历史记录）
+      reload(boolean)   重新加载文档, 当参数是true，任何时候都会重新加载，false的时候，只有在文档改变的时候才会加载，否则直接读取内存当中的。
+      replace() 用新的文档代替当前的文档  （没有历史记录）
+
+三、screen对象：记录了客户端显示屏的信息
+     属性：
+     availHeight   返回显示屏幕的高度 (除 Windows 任务栏之外)。
+     availWidth    返回显示屏幕的宽度 (除 Windows 任务栏之外)。
+
+      height       返回显示屏幕的高度。[分辨率]
+      width        返回显示屏幕的宽度。
+
+四、navigator：对象包含有关浏览器的信息
+   属性：
+1、appName 返回浏览器的名称。 
+2、appCodeName 返回浏览器的代码名。  
+3、appVersion 返回浏览器的平台和版本信息。 
+4、platform 返回运行浏览器的操作系统平台。 
+    
+
+
+ window对象 {
+            属性 {
+                1、 位置类型 {
+                    (1) 获得浏览器的位置:
+                        IE： a.window.screenLeft(获得浏览器距屏幕左上角的左边距)
+                    b.window.screenTop(获得浏览器距屏幕左上角的上边距)
+                    HH： a.window.screenX
+                    b.window.screenY
+                    备注： IE在浏览器文档处， 火狐在浏览器栏上。
+
+                        (2) 获得浏览器的尺寸:
+                        FF: a.window.innerWidth(获得窗口的宽度)
+                    b.window.innerHeight(获得窗口的高度)
+                    通用： a.document.documentElement.clientWidth(宽度)
+                    b.document.documentElement.clientHeight(高度)
+                }
+                2、 关系类型 {
+                    (1) parent 返回父窗口(常用在iframe和frame中的子页面访问父页面中的对象)
+                        (2) top返回顶层窗口， 最顶层的框架(3) self === window(self当前窗口)
+                        (4) length 返回窗口中的框架数量
+                }
+                3、 status
+                设置窗口状态栏的文本(目前只有IE支持)
+            }
+            方法 {
+                1、 窗体控制
+                    (1) 对窗体的移动：
+                window.moveBy(x, y) 当前位置沿着x / y轴移动指定的像素， 负数是反方向
+                window.moveTo(x, y) 当前位置沿着x / y轴移动到指定的像素， 负数是反方向(2) 窗体尺寸的改变：
+                resizeBy(x, y) 相对于当前窗体的大小调整宽度和高度
+                resizeTo(x, y) 把窗体调整为指定的宽度和高度
+                2、 对窗体滚动条的控制：
+                scrollBy(x, y) 相对于当前窗体的大小调整宽度和高度当前滚动条的位置移动的 像素(前提是有滚动条)
+                scrollTo(x, y) 相对于当前窗口的高度或宽度移动到指定的像素
+                3、 时间间隔的函数：
+                setInterval('函数或者代码串', 指定的时间(毫秒)) 按照指定的周期不断的执行函数或是代码串
+                clearInterval() 清除时间函数进程
+                setTimeout('函数或者代码串', 指定的时间(毫秒)) 在指定的毫秒数后只执行一次函数或代码
+                clearTimeout() 清除时间函数进程
+                4、 打开与关闭新的窗口
+                close() 关闭当前窗口
+                open('路径', '名称', '属性') 通过脚本打开新的窗口
+                opener() 子页面访问父页面的元素
+            }
+            history对象 {
+                包含浏览器访问过的url
+                属性:
+                    length返回浏览器历史记录的数量
+                方法：
+                back() 后退
+                forward() 前进
+                go(number) 如果参数是正数， 那么就是前进相应的数目， 负数则后退
+                0 刷新 1 前进 - 1 后退
+            }
+            location对象 {
+                包含有当前url的相关信息
+                属性：
+                href设置或返回完整的url
+                search返回url ? 后面的查询部分
+                方法：
+                assign() 加载新的文档(有历史记录)
+                reload() 重新加载文档, 当参数是true， 任何时候都会重新加载， false的时候， 只有在文档改变的时候才会加载， 否则直接读取内存当中的。
+                replace() 用新的文档代替当前的文档(没有历史记录)
+            }
+            screen对象 {
+                记录了客户端显示屏的信息
+                属性:
+                    availHeight返回显示屏幕的高度
+                availWidth返回显示屏幕的宽度
+                height分辨率高度
+                width分辨率宽度
+                navigator对象 {
+                    对象包含有关浏览器的信息
+                    属性：
+                        (1) appName返回浏览器的名称(2) appCodeName返回浏览器的代码名(3) appVersion返回浏览器的平台和版本信息(4) platform返回运行浏览器的操作系统平台
+                }
+                window对象 {
+                    document对象
+                    history对象
+                    loaction对象
+                    screen对象
+                    navigator对象
+                }
+            }
+        }
+
