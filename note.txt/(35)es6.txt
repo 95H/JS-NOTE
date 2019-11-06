@@ -1,0 +1,559 @@
+严格模式：
+（1）运行模式（混杂模式）
+（2）严格模式
+      目的/作用：
+      消除js语法的一些不合理 不严谨之处 减少一些怪异行为
+      消除代码运行的一些不安全之处
+      
+      使用：
+      在全局函数的第一条语句定义为‘use strict’(如果浏览器不支持，只解析为一条简单的语句)
+      
+      语法和行为改变：
+      必须用var声明变量
+      对象不能有重名的属性
+      创建eval作用域
+      禁止自定义的函数中的this指向window
+
+字符串方法：
+    includes（）//判断是否包含指定的字符串 返回true/false   '123'.includes('1')//true
+    startsWith（）//判断是否以指定字符串开头
+    endsWith（）//判断是否以指定字符串结尾
+    repeat（）//指定重复次数 'a'.repeat（2）//aa
+    
+let循环遍历监听
+    <button>1</button><button>2</button><button>3</button>
+    var btns = document.getElementsByTagName('button')
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].onclick = function () {
+                console.log(i)
+            }
+        }
+  //3、3、3、
+
+数值：
+       二进制用0b表示 //console.log（0b10）
+       八进制用0o表示 //console.log（0o675）
+      
+      Number.isFinite（num）//判断num是否是有限大的数 返回true/false
+      Number.isNaN（num）//判断num是否是NaN
+      Number.isInterger（num）//判断是否是整数
+      Number.parseInt（str）将字符串转换为对应的数值
+      ==Number也是将字符串转为数字类型，但number更为严格，如果有不是数字类型出现会转成NaN而parseInt只要串里面包含数字就会转成功==
+      Math.trunc（num）//直接去除num小数部分
+      Math.ceil（num）//num向上取整
+
+const定义的常量指针不允许改变 定义的对象里面的属性可以随便改变
+
+Obiect：
+   &:Object.create（prototype,[descriptors]）//以指定对象为原型 创建新的对象
+      var obj={a:1} var obj2=Object.create(obj) console.log(obj2.n) //1
+      =为新的对象指定新的属性 并对属性进行描述=
+      value：指定值
+      writable:标识当前的属性值是否可修改 默认false
+      obj2=Object.create(obj，{m:{value:'aa',writable:false}}) console.log(obj2.m) //aa obj2.m='bb' console.log(obj2.m) //aa
+   &:Object.defineProperties(object, descriptors) //为指定对象定义扩展多个属性
+      var person = {
+      firstName: 'sun',
+      lastName: 'wukong'
+    } 
+    Object.defineProperties(person, { // 配置对象
+      fullName: {
+        get: function () { // 读取当前属性值 自动调用  根据其他属性值动态计算当前的属性值
+          return this.firstName + '-' + this.lastName
+        },
+        set: function (value) { // 修改当前属性值的时候 自动调用  同步其他属性值
+          console.log(value)//baigujing
+          var names = value.split('-') // 根据标识拆分成数组
+          this.firstName = names[0]
+          this.lastName = names[1]
+
+        }
+      }
+    })
+
+    console.log(person.fullName)//sun-wukong
+    person.firstName = 'zhu'
+    person.lastName = 'bajie'
+    console.log(person.fullName)//zhu-bajie
+
+    person.fullName = 'bai-gujing'
+    console.log(person.firstName)//bai
+    console.log(person.lastName)//gujing
+     &:
+      对象本身的两个方法
+    get propertyName(){} 用来得到当前属性值的回调函数
+    set propertyName(){} 用来监视当前属性值变化的回调函数
+     var person = {
+        firstName: 'sun',
+        lastName: 'wukong',
+        get fullName () {
+            return this.firstName + '-' + this.lastName
+        },
+        set fullName (value) {
+            console.log(value)//zhu-bajie
+            var names = value.split('-')
+            this.firstName = names[0]
+            this.lastName = names[1]
+        }
+    }
+    console.log(person.fullName) //sun-wukong  
+    person.fullName = 'zhu-bajie'
+    console.log(person.firstName)//zhu
+    console.log(person.lastName)//bajie
+
+变量的解构赋值：
+       给多个形参赋值
+       
+Array：
+      Array.from()//将伪数组对象或者可遍历的对象转为真数组
+      Array.of()//将一系列值转换为数组
+      find(function(value,index,array){return true})//找出第一个满足条件返回true的元素
+      findIndex(function(value, index, arr){return true}) //找出第一个满足条件返回true的元素下标
+      let btns = document.getElementsByTagName('button')
+      console.log(btns) //[button, button, button]
+      console.log(Array.from(btns)) //?[button, button, button]
+      console.log(Array.of(1, '2', true)) //[1, "2", true]
+       let arr = [1, 3, 4, 3]
+       let result = arr.find(function (item, index) {
+          return item > 3
+       })
+       console.log(result) //4
+       result = arr.findIndex(function (item, index) {
+            return item > 3
+       })
+       console.log(result) //2
+
+深拷贝：
+       Object.assign(obj2,obj)
+        // 创建一个用来判断数据类型的函数
+        function getObjClass(obj) {
+            let result = Object.prototype.toString.call(obj).slice(8, -1)
+            return result
+
+        }
+  // 创建一个深度克隆的函数
+
+       常用的拷贝技术
+    1). arr.concat(): 数组浅拷贝
+    2). arr.slice(): 数组浅拷贝
+    3). JSON.parse(JSON.stringify(arr/obj)): 数组或对象深拷贝, 但不能处理函数数据
+    4). 浅拷贝包含函数数据的对象/数组
+    5). 深拷贝包含函数数据的对象/数组
+
+        function deepClone(obj) {
+            let objClass = getObjClass(obj)
+            let result
+            if (objClass === 'Object') {
+                result = {}
+            } else if (objClass === 'Array') {
+                result = []
+            } else {
+                return obj // 如果是其他数据类型 直接返回 不复制
+            }
+
+            // 遍历目标对象
+
+            for (let key in obj) {
+                let value = obj[key]
+
+                if (getObjClass(value) === 'Object') {
+                    result[key] = deepClone(value)
+                } else if (getObjClass(value) === 'Array') {
+                    result[key] = deepClone(value)
+                } else {
+                    result[key] = obj[key]
+                }
+
+            }
+
+            return result
+
+        }
+
+         let obj3 = {
+            name: 'tom',
+            age: 20,
+            sex: {
+                option: '男'
+            }
+        }
+        let obj4 = deepClone(obj3)
+        console.log(obj3) //{option: "女"}
+        console.log(obj4) //{name: "tom", age: 20, sex: {…}}age: 20name: "tom"sex: {option: "女"}
+        obj4.sex.option = '女'
+        console.log(obj3) //{option: "女"}
+
+  * Promise对象: 代表了未来某个将要发生的事件(通常是一个异步操作)
+  * 有了promise对象, 可以将异步操作以同步的流程表达出来, 避免了层层嵌套的回调函数(俗称'回调地狱')
+  * ES6的Promise是一个构造函数, 用来生成promise实例
+  使用pomise有2步：（1）创建promise对象（2）then()调用
+
+  * 创建promise对象
+    let promise = new Promise((resolve, reject) => {
+        //初始化promise状态为 pending
+      //执行异步操作
+      if(异步操作成功) {
+        resolve(value);//修改promise的状态为fullfilled
+      } else {
+        reject(errMsg);//修改promise的状态为rejected
+      }
+    })
+  * 调用promise的then()
+    promise.then(
+      result => console.log(result),
+      errorMsg => alert(errorMsg)
+    )
+
+     * 使用promise封装处理ajax请求
+    let request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+    }
+    request.responseType = 'json';
+    request.open("GET", url);
+    request.send();
+
+    // 创建一个promsie对象
+  /*let promise = new Promise((resolve, reject) => {
+    // 初始化为pendding状态
+    console.log('11111')
+    // 启动异步任务
+    setTimeout(function () {
+      // 如果成功
+     // resolve('成功了。。。')  // 调用resolve(), 修改状态为fullfilled 自动调用成功的回调函数
+    console.log('2222')
+      // 失败
+      reject('失败了。。。。')  // 调用reject(),  修改状态为rejected 自动调用失败的回调函数
+
+    }, 2000)
+
+  })
+
+  promise.then((data) => {  // 成功的回调函数
+    console.log(data)
+
+  }, (error) => {  // 失败的回调函数
+    console.log(error)
+  })
+
+  console.log('3333')*/
+
+
+
+  // 创建一个获取新闻的函数
+
+  function getNews(url) {
+
+    let promise = new Promise((resolve, reject) => {
+      // pendding
+
+      // 启动我们的异步任务
+      let request = new XMLHttpRequest()
+
+      /*0: 未初始化  尚未调用open()
+      * 1：调用open() 未调用send()
+      * 2：调用send()  数据已发送
+      * 3：数据处理中
+      * 4：响应完成
+      * 200:交易成功 */
+
+      request.onreadystatechange = function () {
+        if (request.readyState === 4) {
+          if (request.status === 200) {
+              // 成功
+            let news = request.response
+            resolve(news)   // 修改为fullfilled状态
+          }else {
+            // 失败
+            reject('请求失败。。。')  // 修改为rejected状态
+          }
+
+        }
+      }
+      request.open('get', url)
+      request.responseType = 'json' // 指定返回的数据类型
+      request.send()
+
+    })
+    return promise
+  }
+  getNews('http://localhost:3000/news?id=2')
+          .then((news) => {
+            console.log(news)
+            document.write(JSON.stringify(news))
+            // 获取对应的评论列表
+            return getNews('http://localhost:3000' + news.commentsUrl)   // promise
+          }, (error) => {
+            console.log(error)
+          })
+          .then((comments) => {
+            console.log(comments)
+            document.write('<br><br><br><br><br><br>' + JSON.stringify(comments))
+
+          }, (error) => {
+            console.log(error)
+          })
+
+class:
+     1. 通过class定义类/实现类的继承
+     2. 在类中通过constructor定义构造方法
+     3. 通过new来创建类的实例
+     4. 通过extends来实现类的继承
+     5. 通过super调用父类的构造方法
+     6. 重写从父类中继承的一般方法
+     
+      // 父类型
+  class Person {
+    constructor(name, age) { // 构造函数
+      this.name = name
+      this.age = age
+    }
+    // 定义一般方法
+    showMessage() {
+      console.log(this.name, this.age)//tom 12
+    }
+  }
+  let p = new Person('tom', 12)
+  console.log(p.name, p.age)//tom 12
+  p.showMessage()
+  // 子类型 继承父类型
+  class Student extends Person {
+    constructor(name, age, price) {
+      super(name, age) // 相当于调用父类型的构造函数
+      /*this.name = name
+      this.age = age*/
+      this.price = price
+
+    }
+    // 重写父类型的一般方法
+    showMessage() {
+      console.log(this.name, this.age, this.price)//bob 20 12000
+    }
+  }
+
+  let s = new Student('bob', 20, 12000)
+
+  console.log(s.name, s.age, s.price)//bob 20 12000
+  s.showMessage()
+
+symbol:
+    es5中对	象的属性名都是字符串，容易造成重名，污染环境
+    symbol属性对应的值是惟一的 解决命名冲突问题
+    symbol值不能与其他数据进行计算，包括同字符串拼串
+    for in, for of遍历时不会遍历symbol属性
+
+    使用：
+        1、调用Symbol函数得到symbol值
+          let symbol = Symbol();
+          let obj = {};
+          obj[symbol] = 'hello';
+        2、传参标识
+          let symbol = Symbol('one');
+          let symbol2 = Symbol('two');
+          console.log(symbol);// Symbol('one')
+          console.log(symbol2);// Symbol('two')
+        3、内置Symbol值
+          * 除了定义自己使用的Symbol值以外，ES6还提供了11个内置的Symbol值，指向语言内部使用的方法。
+          - Symbol.iterator
+          * 对象的Symbol.iterator属性，指向该对象的默认遍历器方法
+
+        // 获取symbol
+  let symbol = Symbol()
+  console.log(symbol)  // Symbol()
+  console.log(typeof  symbol)//symbol
+  // 当作对象的属性来使用
+  let obj = {
+    name: 'bob',
+    age: 20
+  }
+  // Symbol属性对应的值是唯一的，解决命名冲突问题
+  let symbol2 = Symbol('one')
+  obj[symbol2] = 'abc'
+  console.log(obj)//age: 20 name: "bob"Symbol(one): "abc"Symbol(two): "123"
+  let symbol3 = Symbol('two')
+  obj[symbol3] = '123'
+  console.log(obj)//{name: "bob", age: 20, Symbol(one): "abc", Symbol(two): "123"}
+  console.log(symbol2 === symbol3)//false
+  // Symbol值不能与其他数据进行计算，包括同字符串拼串
+  //console.log(symbol3 + 123)  // Cannot convert a Symbol value to a number
+  // for in, for of遍历时不会遍历symbol属性。
+  for (let key in obj) {
+    console.log(key)//name age
+  }
+
+1. Set容器 : 无序不可重复的多个value的集合体
+  * Set()
+  * Set(array)
+  * add(value)
+  * delete(value)
+  * has(value)
+  * clear()
+  * size
+2. Map容器 : 无序的 key不重复的多个key-value的集合体
+  * Map()
+  * Map(array)
+  * set(key, value)//添加
+  * get(key)
+  * delete(key)
+  * has(key)
+  * clear()
+  * size
+
+   // let set = new Set([1, 2, 3, 3, 4, 2, 1])
+        let set = new Set([1, 2, 3, 4])
+        // console.log(set)
+        /*
+         * add(value)
+         * delete(value)
+         * has(value)
+         * clear()
+         * size
+         *
+         * */
+        // set.add(10)
+        // console.log(set)
+        // set.delete(4)
+        // console.log(set)
+        // console.log(set.has(7))
+        // // set.clear()
+        // console.log(set)
+        // console.log(set.size)
+        let map = new Map([
+            ['name', 'tom'],
+            ['age', 12]
+        ])
+        console.log(map)
+        /*
+         * set(key, value)//添加
+         * get(key)
+         * delete(key)
+         * has(key)
+         * clear()
+         * size
+         * */
+        map.set('sex', '男')
+        console.log(map)
+        console.log(map.get('age'))
+        // map.delete('name')
+        // console.log(map)
+        // console.log(map.has('age'))
+        // map.clear()
+        // console.log(map)
+        // console.log(map.size)
+
+Iterator：
+         概念： iterator是一种接口机制，为各种不同的数据结构提供统一的访问机制
+    作用：
+      1、为各种数据结构，提供一个统一的、简便的访问接口；
+      2、使得数据结构的成员能够按某种次序排列
+      3、ES6创造了一种新的遍历命令for...of循环，Iterator接口主要供for...of消费。
+    工作原理：
+      - 创建一个指针对象，指向数据结构的起始位置。
+      - 第一次调用next方法，指针自动指向数据结构的第一个成员
+      - 接下来不断调用next方法，指针会一直往后移动，直到指向最后一个成员
+      - 每调用next方法返回的是一个包含value和done的对象，{value: 当前成员的值,done: 布尔值}
+        * value表示当前成员的值，done对应的布尔值表示当前的数据的结构是否遍历结束。
+        * 当遍历结束的时候返回的value值是undefined，done值为false
+    原生具备iterator接口的数据(可用for of遍历)
+      1、Array
+      2、arguments
+      3、set容器
+      4、map容器
+      5、String
+    
+       let arr = [1, 2, 3]
+    function myIterator(arr) {
+      let nextIndex = 0    // 当前指针的位置
+      return {
+        next: function () {
+          return nextIndex < arr.length ? {value: arr[nextIndex++], done: false} : {value: undefined, done: true}
+        }
+      }
+    }
+    let iterator = myIterator(arr)  // 指针对象
+    
+    console.log( iterator.next())
+    console.log( iterator.next())
+    console.log( iterator.next())
+    console.log( iterator.next())
+    
+    
+    
+    console.log(arr[Symbol.iterator]().next().value)
+    
+    for (let key of arr) {
+      console.log(key)
+    }
+    
+    let obj = {
+      n: 12,
+      m: 'abc'
+    }
+    
+    /*for (let key of obj) {   // obj[Symbol.iterator] is not a function
+      console.log(key)
+    }*/
+
+
+
+ Generator函数
+    概念：
+      1、ES6提供的解决异步编程的方案之一
+      2、Generator函数是一个状态机，内部封装了不同状态的数据，
+      3、用来生成遍历器对象
+      4、可暂停函数(惰性求值), yield可暂停，next方法可启动。每次返回的是yield后的表达式结果
+    特点：
+      1、function 与函数名之间有一个星号
+      2、内部用yield表达式来定义不同的状态
+      例如：
+        function* generatorExample(){
+          let result = yield 'hello';  // 状态值为hello
+          yield 'generator'; // 状态值为generator
+        }
+      3、generator函数返回的是指针对象(接11章节里iterator)，而不会执行函数内部逻辑
+      4、调用next方法函数内部逻辑开始执行，遇到yield表达式停止，返回{value: yield后的表达式结果/undefined, done: false/true}
+      5、再次调用next方法会从上一次停止时的yield处开始，直到最后
+      6、yield语句返回结果通常为undefined， 当调用next方法时传参内容会作为启动时yield语句的返回值。
+
+
+    function* myGenerator() {
+      console.log('开始执行')
+     let result =   yield 'hello'
+      console.log(result)
+      yield 'generator'
+    }
+
+    let GT = myGenerator()  // 指针对象
+    console.log(GT.next())
+    console.log(GT.next('aaa'))
+    console.log(GT.next())
+
+   // 案例练习
+    /*
+     * 需求：
+     * 1、发送ajax请求获取新闻内容
+     * 2、新闻内容获取成功后再次发送请求，获取对应的新闻评论内容
+     * 3、新闻内容获取失败则不需要再次发送请求。
+     * 
+     * */
+
+
+    function getNews(url) {
+      $.get(url, function (data) {
+        console.log(data) // 对象
+        // 第二次请求的路径
+        let url = 'http://localhost:3000' + data.commentsUrl
+        send.next(url)
+
+      })
+
+    }
+
+
+    function* sendXML() {
+      let result = yield getNews('http://localhost:3000/news?id=3')
+      yield getNews(result)
+    }
+
+
+    let send = sendXML() // 指针对象
+    send.next()
